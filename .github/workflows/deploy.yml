@@ -49,7 +49,7 @@ jobs:
       - name: Run server
         run: |
           npm start 2>&1 &
-          npx wait-on --timeout 60000 http://127.0.0.1:$PORT
+          npx wait-on --timeout 60000 http://127.0.0.1:27017
       - name: Debug server
         if: failure()
         run: |
