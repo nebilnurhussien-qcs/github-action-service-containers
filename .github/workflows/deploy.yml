@@ -18,19 +18,22 @@ jobs:
     environment: testing #Shows secret from that environment only
     env: #Allows you to add environment variables 
       MONGODB_CONNECTION_PROTOCOL: mongoDB
-      MONGODB_CLUSTER_ADDRESS: mongodb
+      #MONGODB_CLUSTER_ADDRESS: mongodb
+      MONGODB_CLUSTER_ADDRESS: 127.0.0.1:27017
       MONGODB_USERNAME: root
       MONGODB_PASSWORD: example
       PORT: 8080
     runs-on: ubuntu-latest
-    container: #Creates a container on the runner
-      image: node:18 
+    #container: #Creates a container on the runner
+      #image: node:18 
     services:
       monogdb:
         image: mongo
         env:
           MONGO_INITDB_ROOT_USERNAME: root
           MONGO_INITDB_ROOT_PASSWORD: example
+        ports:
+          - 27017
     steps:
       - name: Get Code
         uses: actions/checkout@v3
