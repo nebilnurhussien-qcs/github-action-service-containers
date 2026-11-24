@@ -26,14 +26,14 @@ jobs:
     runs-on: ubuntu-latest
     #container: #Creates a container on the runner
       #image: node:18 
-    services:
-      monogdb:
-        image: mongo
-        env:
-          MONGO_INITDB_ROOT_USERNAME: root
-          MONGO_INITDB_ROOT_PASSWORD: example
-        ports:
-          - 27017:217017
+    #services:
+      #monogdb:
+        #image: mongo
+        #env:
+          #MONGO_INITDB_ROOT_USERNAME: root
+          #MONGO_INITDB_ROOT_PASSWORD: example
+        #ports:
+          #- 27017:217017
     steps:
       - name: Get Code
         uses: actions/checkout@v3
