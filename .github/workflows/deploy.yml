@@ -1,4 +1,4 @@
-name: Deployment
+name: Deployment Branch
 on:
   push:
     branches:
@@ -6,28 +6,31 @@ on:
   pull_request:
     branches:
       - main
+
+
 env:
   MONGODB_DB_NAME: mongodb
+  
+
+  
 jobs:
   test:
-    environment: testing
-    env:
-      MONGODB_CONNECTION_PROTOCOL: mongodb
-      MONGODB_CLUSTER_ADDRESS: 127.0.0.1:27017
+    environment: testing #Shows secret from that environment only
+    env: #Allows you to add environment variables 
+      MONGODB_CONNECTION_PROTOCOL: mongoDB
+      MONGODB_CLUSTER_ADDRESS: mongodb
       MONGODB_USERNAME: root
       MONGODB_PASSWORD: example
       PORT: 8080
     runs-on: ubuntu-latest
-    # container: 
-    #   image: node:18
+    container: #Creates a container on the runner
+      image: node:18 
     services:
-      mongodb:
+      monogdb:
         image: mongo
         env:
           MONGO_INITDB_ROOT_USERNAME: root
           MONGO_INITDB_ROOT_PASSWORD: example
-        ports:
-          - 27017:27017
     steps:
       - name: Get Code
         uses: actions/checkout@v3
@@ -38,21 +41,31 @@ jobs:
           key: npm-deps-${{ hashFiles('**/package-lock.json') }}
       - name: Install dependencies
         run: npm install
+      #- name: Run server
+        #run: npm start & npx wait-on --timeout 60000 http://127.0.0.1:$PORT
       - name: Run server
-        run: npm start & npx wait-on http://127.0.0.1:$PORT
+        run: |
+          npm start 2>&1 &
+          npx wait-on --timeout 60000 http://127.0.0.1:$PORT
+      - name: Debug server
+        if: failure()
+        run: |
+          pkill -f "npm start" || true
+          timeout 60 npm start
       - name: Run tests
         run: npm test
-        # value showing from repo environment secret
       - name: Output information
-        run: |
+        run: | #Here we are accessing environment variables
           echo "MONGODB_USERNAME: ${{ env.MONGODB_USERNAME }}"
-          echo "MONGODB_DBNAME: ${{ env.MONGODB_DB_NAME }}"
+          echo "MONGODB_NAME: ${{ env.MONGODB_DB_NAME }}" 
+          
   deploy:
     needs: test
     runs-on: ubuntu-latest
     steps:
       - name: Output information
-        run: |        
-          echo "MONGODB_USERNAME: ${{ env.MONGODB_USERNAME }}"
-          echo "MONGODB_DBNAME: ${{ env.MONGODB_DB_NAME }}"
-          echo "MONGODB_PASSWORD: ${{ env.MONGODB_PASSWORD }}"
+        run: |
+          echo "...."
+
+
+
