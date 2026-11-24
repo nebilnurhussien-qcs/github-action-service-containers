@@ -15,7 +15,7 @@ env:
   
 jobs:
   test:
-    environment: testing #Shows secret from that environment only
+    #environment: testing #Shows secret from that environment only
     env: #Allows you to add environment variables 
       MONGODB_CONNECTION_PROTOCOL: mongoDB
       #MONGODB_CLUSTER_ADDRESS: mongodb
